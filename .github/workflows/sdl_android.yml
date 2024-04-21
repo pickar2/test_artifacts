@@ -1,6 +1,9 @@
 name: Build (Android)
 
-on: [push, pull_request]
+on:
+  push:
+    paths:
+      - SDL/**
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.run_id }}
@@ -12,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: SDL
+        working-directory: ../SDL
 
     strategy:
       fail-fast: false
