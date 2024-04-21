@@ -94,7 +94,6 @@ jobs:
       working-directory: SDL
       id: build
       run: |
-        cd SDL
         ${{ matrix.platform.source_cmd }}
         cmake --build build/ --config Release --verbose --parallel
     - name: Run build-time tests (CMake)
