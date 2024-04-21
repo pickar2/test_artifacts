@@ -11,9 +11,6 @@ jobs:
   android:
     name: ${{ matrix.platform.name }}
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: SDL
 
     strategy:
       fail-fast: false
@@ -33,7 +30,7 @@ jobs:
       - name: Build (Android.mk)
         if: ${{ contains(matrix.platform.name, 'Android.mk') }}
         run: |
-          ./build-scripts/androidbuildlibs.sh
+          ./SDL/build-scripts/androidbuildlibs.sh
       - uses: actions/setup-java@v4
         if: ${{ contains(matrix.platform.name, 'CMake') }}
         with:
@@ -45,6 +42,7 @@ jobs:
           sudo apt-get update
           sudo apt-get install ninja-build pkg-config
       - name: Configure (CMake)
+        working-directory: SDL
         if: ${{ contains(matrix.platform.name, 'CMake') }}
         run: |
           cmake -S . -B build \
@@ -66,24 +64,29 @@ jobs:
             -DCMAKE_BUILD_TYPE=Release \
             -GNinja
       - name: Build (CMake)
+        working-directory: SDL
         if: ${{ contains(matrix.platform.name, 'CMake') }}
         run: |
           cmake --build build --config Release --parallel --verbose
       - name: Build test apk's (CMake)
+        working-directory: SDL
         if: ${{ contains(matrix.platform.name, 'CMake') }}
         run: |
           cmake --build build --config Release --parallel --verbose --target testautomation-apk testaudiocapture-apk testcontroller-apk testmultiaudio-apk testsprite-apk
       - name: Install (CMake)
+        working-directory: SDL
         if: ${{ contains(matrix.platform.name, 'CMake') }}
         run: |
           cmake --install build --config Release
           echo "SDL3_DIR=$(pwd)/prefix" >> $GITHUB_ENV
           ( cd prefix; find ) | LC_ALL=C sort -u
       - name: Package (CPack)
+        working-directory: SDL
         if: ${{ contains(matrix.platform.name, 'CMake') }}
         run: |
           cmake --build build/ --config Release --target package
       - name: Verify CMake configuration files
+        working-directory: SDL
         if: ${{ contains(matrix.platform.name, 'CMake') }}
         run: |
           cmake -S cmake/test -B cmake_config_build -G Ninja \
@@ -94,6 +97,7 @@ jobs:
             -DCMAKE_PREFIX_PATH=${{ env.SDL3_DIR }}
           cmake --build cmake_config_build --verbose
       - name: Verify sdl3.pc
+        working-directory: SDL
         if: ${{ contains(matrix.platform.name, 'CMake') }}
         run: |
           export CC="${{ steps.setup_ndk.outputs.ndk-path }}/toolchains/llvm/prebuilt/linux-x86_64/bin/clang --target=${{ matrix.platform.arch }}-none-linux-androideabi${{ matrix.platform.android_platform }}"
@@ -104,10 +108,10 @@ jobs:
         with:
           if-no-files-found: error
           name: ${{ matrix.platform.artifact }}
-          path: build/dist/SDL3*
+          path: SDL/build/dist/SDL3*
       - uses: actions/upload-artifact@v4
         if: ${{ contains(matrix.platform.name, 'CMake') }}
         with:
           if-no-files-found: error
           name: ${{ matrix.platform.apk-artifact }}
-          path: build/test/*.apk
+          path: SDL/build/test/*.apk
