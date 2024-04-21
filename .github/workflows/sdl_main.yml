@@ -70,11 +70,11 @@ jobs:
       with:
         submodules: true
     - name: Check that versioning is consistent
-      working-directory: SDL
       # We only need to run this once: arbitrarily use the Linux/CMake build
       if: "runner.os == 'Linux'"
       run: ./SDL/build-scripts/test-versioning.sh
     - name: Configure (CMake)
+      working-directory: SDL
       run: |
         ${{ matrix.platform.source_cmd }}
         cmake -S . -B build -G Ninja \
