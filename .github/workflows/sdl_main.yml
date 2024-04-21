@@ -67,8 +67,8 @@ jobs:
           llvm
 
     - uses: actions/checkout@v4
-        with:
-          submodules: true
+      with:
+        submodules: true
     - name: Check that versioning is consistent
       working-directory: SDL
       # We only need to run this once: arbitrarily use the Linux/CMake build
