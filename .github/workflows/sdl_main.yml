@@ -15,7 +15,7 @@ jobs:
     defaults:
       run:
         shell: ${{ matrix.platform.shell }}
-        working-directory: ../SDL
+        working-directory: SDL
 
     strategy:
       fail-fast: false
@@ -29,6 +29,7 @@ jobs:
 
     steps:
     - name: Set up MSYS2
+      working-directory: .
       if: matrix.platform.shell == 'msys2 {0}'
       uses: msys2/setup-msys2@v2
       with:
@@ -42,6 +43,7 @@ jobs:
           ${{ matrix.platform.msys-env }}-clang-tools-extra
 
     - name: Setup Linux dependencies
+      working-directory: .
       if: runner.os == 'Linux'
       run: |
         sudo apt-get update
@@ -53,11 +55,13 @@ jobs:
             libegl1-mesa-dev libdbus-1-dev libibus-1.0-dev libudev-dev fcitx-libs-dev
 
     - name: Setup extra Ubuntu 22.04 dependencies
+      working-directory: .
       if: matrix.platform.os == 'ubuntu-22.04'
       run: |
         sudo apt-get install libpipewire-0.3-dev libdecor-0-dev
 
     - name: Setup Macos dependencies
+      working-directory: .
       if: runner.os == 'macOS'
       run: |
         export HOMEBREW_NO_INSTALLED_DEPENDENTS_CHECK=1
@@ -68,6 +72,7 @@ jobs:
           llvm
 
     - name: Setup Intel oneAPI
+      working-directory: .
       if: matrix.platform.intel
       run: |
         # Download the key to system keyring
