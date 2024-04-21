@@ -15,7 +15,6 @@ jobs:
     defaults:
       run:
         shell: ${{ matrix.platform.shell }}
-        working-directory: SDL
 
     strategy:
       fail-fast: false
@@ -42,7 +41,6 @@ jobs:
           ${{ matrix.platform.msys-env }}-clang-tools-extra
 
     - name: Setup Linux dependencies
-      working-directory: .
       if: runner.os == 'Linux'
       run: |
         sudo apt-get update
@@ -54,13 +52,11 @@ jobs:
             libegl1-mesa-dev libdbus-1-dev libibus-1.0-dev libudev-dev fcitx-libs-dev
 
     - name: Setup extra Ubuntu 22.04 dependencies
-      working-directory: .
       if: matrix.platform.os == 'ubuntu-22.04'
       run: |
         sudo apt-get install libpipewire-0.3-dev libdecor-0-dev
 
     - name: Setup Macos dependencies
-      working-directory: .
       if: runner.os == 'macOS'
       run: |
         export HOMEBREW_NO_INSTALLED_DEPENDENTS_CHECK=1
@@ -70,25 +66,11 @@ jobs:
           pkg-config \
           llvm
 
-    - name: Setup Intel oneAPI
-      working-directory: .
-      if: matrix.platform.intel
-      run: |
-        # Download the key to system keyring
-        wget -O- https://apt.repos.intel.com/intel-gpg-keys/GPG-PUB-KEY-INTEL-SW-PRODUCTS.PUB \
-          | gpg --dearmor | sudo tee /usr/share/keyrings/oneapi-archive-keyring.gpg > /dev/null
-
-        # Add signed entry to apt sources and configure the APT client to use Intel repository:
-        echo "deb [signed-by=/usr/share/keyrings/oneapi-archive-keyring.gpg] https://apt.repos.intel.com/oneapi all main" | sudo tee /etc/apt/sources.list.d/oneAPI.list
-
-        # Update package list
-        sudo apt-get update -y
-
-        # Install oneAPI
-        sudo apt-get install -y intel-oneapi-compiler-dpcpp-cpp-and-cpp-classic
-
     - uses: actions/checkout@v4
+        with:
+          submodules: true
     - name: Check that versioning is consistent
+      working-directory: SDL
       # We only need to run this once: arbitrarily use the Linux/CMake build
       if: "runner.os == 'Linux'"
       run: ./SDL/build-scripts/test-versioning.sh
@@ -109,12 +91,14 @@ jobs:
           ${{ matrix.platform.cmake-platform }} \
           ${{ matrix.platform.cmake }}
     - name: Build (CMake)
+      working-directory: SDL
       id: build
       run: |
         cd SDL
         ${{ matrix.platform.source_cmd }}
         cmake --build build/ --config Release --verbose --parallel
     - name: Run build-time tests (CMake)
+      working-directory: SDL
       if: ${{ !matrix.platform.cross-build }}
       run: |
         ${{ matrix.platform.source_cmd }}
@@ -126,16 +110,19 @@ jobs:
           strings build/libSDL3.so.0 | grep SDL-
         fi
     - name: Install (CMake)
+      working-directory: SDL
       run: |
         ${{ matrix.platform.source_cmd }}
         set -eu
         cmake --install build/ --config Release
         ( cd cmake_prefix; find . ) | LC_ALL=C sort -u
     - name: Package (CPack)
+      working-directory: SDL
       if: ${{ always() && steps.build.outcome == 'success' }}
       run: |
         cmake --build build/ --config Release --target package
     - name: Verify CMake configuration files
+      working-directory: SDL
       run: |
         ${{ matrix.platform.source_cmd }}
         cmake -S cmake/test -B cmake_config_build -G Ninja \
@@ -146,6 +133,7 @@ jobs:
           -DCMAKE_PREFIX_PATH=$(echo "${{ github.workspace }}/cmake_prefix" | sed  -e 's#\\#/#g')
         cmake --build cmake_config_build --verbose
     - name: Verify sdl3.pc
+      working-directory: SDL
       if: ${{ !matrix.platform.skip_test_pkgconfig }}
       run: |
         ${{ matrix.platform.source_cmd }}
@@ -156,4 +144,4 @@ jobs:
       with:
         if-no-files-found: error
         name: ${{ matrix.platform.artifact }}
-        path: build/dist/SDL3*
+        path: SDL/build/dist/SDL3*
