@@ -89,6 +89,7 @@ jobs:
 
     - uses: actions/checkout@v4
     - name: Check that versioning is consistent
+      working-directory: SDL
       # We only need to run this once: arbitrarily use the Linux/CMake build
       if: "runner.os == 'Linux'"
       run: ./build-scripts/test-versioning.sh
