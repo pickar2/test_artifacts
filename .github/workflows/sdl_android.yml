@@ -1,4 +1,4 @@
-name: Build (Android)
+name: SDL Build (Android)
 
 on:
   push:
