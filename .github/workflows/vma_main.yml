@@ -80,7 +80,7 @@ jobs:
       id: build
       run: |
         ${{ matrix.platform.source_cmd }}
-        clang++ -v -O3 -gz -fPIC -Wno-nullability-completeness -DVMA_IMPLEMENTATION -DVMA_CALL_PRE=__attribute__((visibility("default"))) -DVMA_CALL_POST=__cdecl -I../Vulkan-Headers/include -c include/vk_mem_alloc.cpp -o build/VMA.o
+        clang++ -v -O3 -gz -fPIC -fvisibility=default -Wno-nullability-completeness -DVMA_IMPLEMENTATION -DVMA_CALL_POST=__cdecl -I../Vulkan-Headers/include -c include/vk_mem_alloc.cpp -o build/VMA.o
         clang++ -shared build/VMA.o -o build/VMA.so
     - uses: actions/upload-artifact@v4
       if: ${{ always() && steps.build.outcome == 'success' }}
