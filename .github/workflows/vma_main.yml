@@ -74,14 +74,17 @@ jobs:
       working-directory: VulkanMemoryAllocator
       run: |
         ${{ matrix.platform.source_cmd }}
-        echo "#pragma comment(lib, \"../libs/libvulkan.so.1\")\n#include \"vk_mem_alloc.h\"" > include/vk_mem_alloc.cpp
+        echo "#pragma comment(lib, \"../libs/libvulkan\")" > include/vk_mem_alloc.cpp
+        echo "#include \"vk_mem_alloc.h\"" >> include/vk_mem_alloc.cpp
         mkdir build
     - name: Prepare Windows
       if: runner.os == 'Windows'
       working-directory: VulkanMemoryAllocator
       run: |
         ${{ matrix.platform.source_cmd }}
-        echo "#pragma comment(lib, \"vulkan-1.lib\")\n#define VMA_CALL_PRE  __declspec(dllexport)\n#include \"vk_mem_alloc.h\"" > include/vk_mem_alloc.cpp
+        echo "#pragma comment(lib, \"../libs/vulkan-1\")" > include/vk_mem_alloc.cpp
+        echo "#define VMA_CALL_PRE  __declspec(dllexport)" >> include/vk_mem_alloc.cpp
+        echo "#include \"vk_mem_alloc.h\"" >> include/vk_mem_alloc.cpp
         mkdir build
     - name: Build Linux
       if: runner.os == 'Linux'
@@ -97,8 +100,8 @@ jobs:
       id: build_windows
       run: |
         ${{ matrix.platform.source_cmd }}
-        clang++ -v -O3 -gz -target x86_64-windows-msvc -fPIC -fvisibility=default -Wno-nullability-completeness -DVMA_IMPLEMENTATION -DVMA_CALL_POST=__cdecl -I../Vulkan-Headers/include -c include/vk_mem_alloc.cpp -o build/VMA.o
-        clang++ -shared build/VMA.o -o build/VMA.so
+        clang++ -v -O3 -gz -target x86_64-windows-msvc -fvisibility=default -Wno-nullability-completeness -DVMA_IMPLEMENTATION -DVMA_CALL_POST=__cdecl -I../Vulkan-Headers/include -c include/vk_mem_alloc.cpp -o build/VMA.o
+        clang++ -shared build/VMA.o -o build/VMA.dll
     - uses: actions/upload-artifact@v4
       if: ${{ always() && steps.build.outcome == 'success' }}
       with:
