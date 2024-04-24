@@ -86,7 +86,7 @@ jobs:
     - name: Build Linux
       if: runner.os == 'Linux'
       working-directory: VulkanMemoryAllocator
-      id: build
+      id: build_linux
       run: |
         ${{ matrix.platform.source_cmd }}
         clang++ -v -O3 -gz -fPIC -fvisibility=default -Wno-nullability-completeness -DVMA_IMPLEMENTATION -DVMA_CALL_POST=__cdecl -I../Vulkan-Headers/include -c include/vk_mem_alloc.cpp -o build/VMA.o
@@ -94,7 +94,7 @@ jobs:
     - name: Build Windows
       if: runner.os == 'Windows'
       working-directory: VulkanMemoryAllocator
-      id: build
+      id: build_windows
       run: |
         ${{ matrix.platform.source_cmd }}
         clang++ -v -O3 -gz -target x86_64-windows-msvc -fPIC -fvisibility=default -Wno-nullability-completeness -DVMA_IMPLEMENTATION -DVMA_CALL_POST=__cdecl -I../Vulkan-Headers/include -c include/vk_mem_alloc.cpp -o build/VMA.o
