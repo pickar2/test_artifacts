@@ -92,7 +92,7 @@ jobs:
       id: build_linux
       run: |
         ${{ matrix.platform.source_cmd }}
-        clang++ -v -O3 -gz -target x86_64-pc-linux-gnu -fPIC -fvisibility=default -Wno-nullability-completeness -DVMA_IMPLEMENTATION -DVMA_CALL_POST=__cdecl -I../Vulkan-Headers/include -c include/vk_mem_alloc.cpp -o build/VMA.o
+        clang++ -v -O3 -gz --library-path=../libs/ -lvulkan -fPIC -fvisibility=default -Wno-nullability-completeness -DVMA_IMPLEMENTATION -DVMA_CALL_POST=__cdecl -I../Vulkan-Headers/include -c include/vk_mem_alloc.cpp -o build/VMA.o
         clang++ -shared build/VMA.o -o build/VMA.so
     - name: Build Windows
       if: runner.os == 'Windows'
