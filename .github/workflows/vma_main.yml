@@ -69,37 +69,21 @@ jobs:
     - uses: actions/checkout@v4
       with:
         submodules: true
-    - name: Configure (CMake)
+    - name: Prepare
       working-directory: VulkanMemoryAllocator
       run: |
         ${{ matrix.platform.source_cmd }}
-        cmake -S . -B build -G Ninja \
-          -Wdeprecated -Wdev -Werror \
-          -DCMAKE_INSTALL_PREFIX=cmake_prefix \
-          -DCMAKE_BUILD_TYPE=Release \
-          ${{ matrix.platform.cmake-platform }} \
-          ${{ matrix.platform.cmake }}
-    - name: Build (CMake)
+        echo -e "#pragma comment(lib, \"vulkan-1.lib\")\n#define VMA_IMPLEMENTATION\n#include \"vk_mem_alloc.h\n\"" > include/vk_mem_alloc.cpp
+    - name: Build
       working-directory: VulkanMemoryAllocator
       id: build
       run: |
         ${{ matrix.platform.source_cmd }}
-        cmake --build build/ --config Release --verbose --parallel
-    - name: Install (CMake)
-      working-directory: VulkanMemoryAllocator
-      run: |
-        ${{ matrix.platform.source_cmd }}
-        set -eu
-        cmake --install build/ --prefix build/install
-        ( cd cmake_prefix; find . ) | LC_ALL=C sort -u
-    - name: Package (CPack)
-      working-directory: VulkanMemoryAllocator
-      if: ${{ always() && steps.build.outcome == 'success' }}
-      run: |
-        cpack build/
+        clang++ -v -O3 -gz -target x86_64-linux-gnu -Wno-nullability-completeness -DVMA_CALL_POST=__cdecl -I../Vulkan-Headers/include -c include/vk_mem_alloc.cpp -o build/VMA.o
+        clang++ -shared build/VMA.o -o build/VMA.so
     - uses: actions/upload-artifact@v4
       if: ${{ always() && steps.build.outcome == 'success' }}
       with:
         if-no-files-found: error
         name: ${{ matrix.platform.artifact }}
-        path: VulkanMemoryAllocator/build/dist/VulkanMemoryAllocator*
+        path: VulkanMemoryAllocator/build*
