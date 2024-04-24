@@ -79,6 +79,7 @@ jobs:
       id: build
       run: |
         ${{ matrix.platform.source_cmd }}
+        mkdir build
         clang++ -v -O3 -gz -target x86_64-linux-gnu -Wno-nullability-completeness -DVMA_CALL_POST=__cdecl -I../Vulkan-Headers/include -c include/vk_mem_alloc.cpp -o build/VMA.o
         clang++ -shared build/VMA.o -o build/VMA.so
     - uses: actions/upload-artifact@v4
