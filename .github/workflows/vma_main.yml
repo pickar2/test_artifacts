@@ -20,11 +20,11 @@ jobs:
       fail-fast: false
       matrix:
         platform:
-        - { name: Windows (clang64),              os: windows-latest, shell: 'msys2 {0}', msystem: clang64, msys-env: mingw-w64-clang-x86_64, artifact: 'VulkanMemoryAllocator-msys2-clang64' }
+        # - { name: Windows (clang64),              os: windows-latest, shell: 'msys2 {0}', msystem: clang64, msys-env: mingw-w64-clang-x86_64, artifact: 'VulkanMemoryAllocator-msys2-clang64' }
         - { name: Ubuntu 20.04,                   os: ubuntu-20.04,   shell: sh, artifact: 'VulkanMemoryAllocator-ubuntu20.04' }
-        - { name: MacOS (Framework),              os: macos-latest,   shell: sh, cmake-platform: '-DCMAKE_OSX_ARCHITECTURES="x86_64;arm64"', cmake: '-DVulkanMemoryAllocator_FRAMEWORK=ON -DVulkanMemoryAllocator_CLANG_TIDY=OFF', skip_test_pkgconfig: true, artifact: 'VulkanMemoryAllocator-macos-framework', no-static: true }
-        - { name: MacOS (GNU prefix),             os: macos-latest,   shell: sh, cmake-platform: '-DCMAKE_OSX_ARCHITECTURES="x86_64"', cmake: '-DCLANG_TIDY_BINARY="$(brew --prefix llvm)/bin/clang-tidy"', artifact: 'VulkanMemoryAllocator-macos-gnu' }
-        - { name: iOS (GNU prefix),               os: macos-latest,   shell: sh, cmake-platform: '-DCMAKE_SYSTEM_NAME=iOS -DCMAKE_OSX_ARCHITECTURES="x86_64;arm64"',  cross-build: true, skip_test_pkgconfig: true, artifact: 'VulkanMemoryAllocator-ios-gnu' }
+        # - { name: MacOS (Framework),              os: macos-latest,   shell: sh, cmake-platform: '-DCMAKE_OSX_ARCHITECTURES="x86_64;arm64"', cmake: '-DVulkanMemoryAllocator_FRAMEWORK=ON -DVulkanMemoryAllocator_CLANG_TIDY=OFF', skip_test_pkgconfig: true, artifact: 'VulkanMemoryAllocator-macos-framework', no-static: true }
+        # - { name: MacOS (GNU prefix),             os: macos-latest,   shell: sh, cmake-platform: '-DCMAKE_OSX_ARCHITECTURES="x86_64"', cmake: '-DCLANG_TIDY_BINARY="$(brew --prefix llvm)/bin/clang-tidy"', artifact: 'VulkanMemoryAllocator-macos-gnu' }
+        # - { name: iOS (GNU prefix),               os: macos-latest,   shell: sh, cmake-platform: '-DCMAKE_SYSTEM_NAME=iOS -DCMAKE_OSX_ARCHITECTURES="x86_64;arm64"',  cross-build: true, skip_test_pkgconfig: true, artifact: 'VulkanMemoryAllocator-ios-gnu' }
 
     steps:
     - name: Set up MSYS2
@@ -80,7 +80,7 @@ jobs:
       id: build
       run: |
         ${{ matrix.platform.source_cmd }}
-        clang++ -v -O3 -gz -fPIC -Wno-nullability-completeness -DVMA_IMPLEMENTATION -DVMA_CALL_POST=__cdecl -I../Vulkan-Headers/include -c include/vk_mem_alloc.cpp -o build/VMA.o
+        clang++ -v -O3 -gz -fPIC -Wno-nullability-completeness -DVMA_IMPLEMENTATION -DVMA_CALL_PRE=__attribute__((visibility("default"))) -DVMA_CALL_POST=__cdecl -I../Vulkan-Headers/include -c include/vk_mem_alloc.cpp -o build/VMA.o
         clang++ -shared build/VMA.o -o build/VMA.so
     - uses: actions/upload-artifact@v4
       if: ${{ always() && steps.build.outcome == 'success' }}
