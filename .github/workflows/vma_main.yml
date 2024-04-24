@@ -73,13 +73,13 @@ jobs:
       working-directory: VulkanMemoryAllocator
       run: |
         ${{ matrix.platform.source_cmd }}
-        echo -e "#pragma comment(lib, \"vulkan-1.lib\")\n#define VMA_IMPLEMENTATION\n#include \"vk_mem_alloc.h\"" > include/vk_mem_alloc.cpp
+        echo "#pragma comment(lib, \"vulkan-1.lib\")\n#define VMA_IMPLEMENTATION\n#include \"vk_mem_alloc.h\"" > include/vk_mem_alloc.cpp
+        mkdir build
     - name: Build
       working-directory: VulkanMemoryAllocator
       id: build
       run: |
         ${{ matrix.platform.source_cmd }}
-        mkdir build
         clang++ -v -O3 -gz -target x86_64-linux-gnu -Wno-nullability-completeness -DVMA_CALL_POST=__cdecl -I../Vulkan-Headers/include -c include/vk_mem_alloc.cpp -o build/VMA.o
         clang++ -shared build/VMA.o -o build/VMA.so
     - uses: actions/upload-artifact@v4
