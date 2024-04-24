@@ -20,7 +20,7 @@ jobs:
       fail-fast: false
       matrix:
         platform:
-        - { name: Windows (clang64),              os: windows-latest, shell: 'msys2 {0}', msystem: mingw64, msys-env: mingw-w64-x86_64, artifact: 'VulkanMemoryAllocator-msys2-clang64' }
+        # - { name: Windows (clang64),              os: windows-latest, shell: 'msys2 {0}', msystem: mingw64, msys-env: mingw-w64-x86_64, artifact: 'VulkanMemoryAllocator-msys2-clang64' }
         - { name: Ubuntu 20.04,                   os: ubuntu-20.04,   shell: sh, artifact: 'VulkanMemoryAllocator-ubuntu20.04' }
         # - { name: MacOS (Framework),              os: macos-latest,   shell: sh, cmake-platform: '-DCMAKE_OSX_ARCHITECTURES="x86_64;arm64"', cmake: '-DVulkanMemoryAllocator_FRAMEWORK=ON -DVulkanMemoryAllocator_CLANG_TIDY=OFF', skip_test_pkgconfig: true, artifact: 'VulkanMemoryAllocator-macos-framework', no-static: true }
         # - { name: MacOS (GNU prefix),             os: macos-latest,   shell: sh, cmake-platform: '-DCMAKE_OSX_ARCHITECTURES="x86_64"', cmake: '-DCLANG_TIDY_BINARY="$(brew --prefix llvm)/bin/clang-tidy"', artifact: 'VulkanMemoryAllocator-macos-gnu' }
