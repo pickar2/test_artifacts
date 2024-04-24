@@ -73,7 +73,7 @@ jobs:
       working-directory: VulkanMemoryAllocator
       run: |
         ${{ matrix.platform.source_cmd }}
-        echo "#pragma comment(lib, \"libvulkan.so.1\")\n#define VMA_IMPLEMENTATION\n#include \"vk_mem_alloc.h\"" > include/vk_mem_alloc.cpp
+        echo "#pragma comment(lib, \"../libs/libvulkan.so.1\")\n#define VMA_IMPLEMENTATION\n#include \"vk_mem_alloc.h\"" > include/vk_mem_alloc.cpp
         mkdir build
     - name: Build
       working-directory: VulkanMemoryAllocator
