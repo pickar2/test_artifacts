@@ -20,7 +20,7 @@ jobs:
       fail-fast: false
       matrix:
         platform:
-        - { name: Windows (clang64),              os: windows-latest, shell: 'msys2 {0}', msystem: mingw64, msys-env: mingw-w64-x86_64, artifact: 'VulkanMemoryAllocator-msys2-clang64' }
+        # - { name: Windows (clang64),              os: windows-latest, shell: 'msys2 {0}', msystem: mingw64, msys-env: mingw-w64-x86_64, artifact: 'VulkanMemoryAllocator-msys2-clang64' }
         - { name: Ubuntu 20.04,                   os: ubuntu-20.04,   shell: sh, artifact: 'VulkanMemoryAllocator-ubuntu20.04' }
         # - { name: MacOS (Framework),              os: macos-latest,   shell: sh, cmake-platform: '-DCMAKE_OSX_ARCHITECTURES="x86_64;arm64"', cmake: '-DVulkanMemoryAllocator_FRAMEWORK=ON -DVulkanMemoryAllocator_CLANG_TIDY=OFF', skip_test_pkgconfig: true, artifact: 'VulkanMemoryAllocator-macos-framework', no-static: true }
         # - { name: MacOS (GNU prefix),             os: macos-latest,   shell: sh, cmake-platform: '-DCMAKE_OSX_ARCHITECTURES="x86_64"', cmake: '-DCLANG_TIDY_BINARY="$(brew --prefix llvm)/bin/clang-tidy"', artifact: 'VulkanMemoryAllocator-macos-gnu' }
@@ -49,7 +49,7 @@ jobs:
             libaudio-dev libjack-dev libsndio-dev libusb-1.0-0-dev libx11-dev libxext-dev \
             libxrandr-dev libxcursor-dev libxfixes-dev libxi-dev libxss-dev libwayland-dev \
             libxkbcommon-dev libdrm-dev libgbm-dev libgl1-mesa-dev libgles2-mesa-dev \
-            libegl1-mesa-dev libdbus-1-dev libibus-1.0-dev libudev-dev fcitx-libs-dev
+            libegl1-mesa-dev libdbus-1-dev libibus-1.0-dev libudev-dev fcitx-libs-dev libvulkan-dev
 
     - name: Setup extra Ubuntu 22.04 dependencies
       if: matrix.platform.os == 'ubuntu-22.04'
@@ -74,8 +74,7 @@ jobs:
       working-directory: VulkanMemoryAllocator
       run: |
         ${{ matrix.platform.source_cmd }}
-        echo "#pragma comment(lib, \"../libs/libvulkan\")" > include/vk_mem_alloc.cpp
-        echo "#include \"vk_mem_alloc.h\"" >> include/vk_mem_alloc.cpp
+        echo "#include \"vk_mem_alloc.h\"" > include/vk_mem_alloc.cpp
         mkdir build
     - name: Prepare Windows
       if: runner.os == 'Windows'
@@ -93,7 +92,7 @@ jobs:
       run: |
         ${{ matrix.platform.source_cmd }}
         clang++ -v -O3 -gz -fPIC -fvisibility=default -Wno-nullability-completeness -DVMA_IMPLEMENTATION -DVMA_CALL_POST=__cdecl -I../Vulkan-Headers/include -c include/vk_mem_alloc.cpp -o build/VMA.o
-        clang++ -shared build/VMA.o ../libs/libvulkan.so -o build/VMA.so
+        clang++ -shared build/VMA.o -lvulkan -o build/VMA.so
     - name: Build Windows
       if: runner.os == 'Windows'
       working-directory: VulkanMemoryAllocator
