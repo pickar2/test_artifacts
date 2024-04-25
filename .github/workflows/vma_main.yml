@@ -91,7 +91,7 @@ jobs:
       id: build_linux
       run: |
         ${{ matrix.platform.source_cmd }}
-        gcc include/vk_mem_alloc.h src/VmaUsage.h src/VmaUsage.cpp ../libs/libvulkan.so -shared -o build/VMA.so -fPIC
+        gcc -Iinclude/ include/vk_mem_alloc.h src/VmaUsage.h src/VmaUsage.cpp ../libs/libvulkan.so -shared -o build/VMA.so -fPIC
     - name: Build Windows
       if: runner.os == 'Windows'
       working-directory: VulkanMemoryAllocator
