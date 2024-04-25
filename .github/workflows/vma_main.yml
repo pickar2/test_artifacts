@@ -91,7 +91,7 @@ jobs:
       id: build_linux
       run: |
         ${{ matrix.platform.source_cmd }}
-        gcc -v -O3 -gz -fPIC -shared -fvisibility=default -Wno-nullability-completeness -DVMA_IMPLEMENTATION -DVMA_CALL_POST=__cdecl -I../Vulkan-Headers/include include/vk_mem_alloc.h include/vk_mem_alloc.cpp ../libs/libvulkan.so -o build/VMA.o
+        gcc include/vk_mem_alloc.h include/vk_mem_alloc.cpp ../libs/libvulkan.so -shared -o build/VMA.so -fPIC
     - name: Build Windows
       if: runner.os == 'Windows'
       working-directory: VulkanMemoryAllocator
