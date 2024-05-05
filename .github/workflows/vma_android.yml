@@ -74,14 +74,14 @@ jobs:
         working-directory: VulkanMemoryAllocator
         if: ${{ contains(matrix.platform.name, 'CMake') }}
         run: |
-          chmod -R +x ${{ steps.setup_ndk.outputs.ndk-path }}/toolchains/llvm/prebuilt/linux-x86_64/bin
+          chmod -R +x ${{ steps.setup_ndk.outputs.ndk-path }}/toolchains/llvm/prebuilt/linux-x86_64/bin/lld.ld
           ls -l ${{ steps.setup_ndk.outputs.ndk-path }}/toolchains/llvm/prebuilt/linux-x86_64/bin
           export PATH="${{ steps.setup_ndk.outputs.ndk-path }}/toolchains/llvm/prebuilt/linux-x86_64/bin:$PATH"
           # cd 
           # export CC="${{ steps.setup_ndk.outputs.ndk-path }}/toolchains/llvm/prebuilt/linux-x86_64/bin/clang --target=${{ matrix.platform.arch }}-none-linux-androideabi${{ matrix.platform.android_platform }}"
           # pwd # /home/runner/work/test_artifacts/test_artifacts/VulkanMemoryAllocator
-          ${{ steps.setup_ndk.outputs.ndk-path }}/toolchains/llvm/prebuilt/linux-x86_64/bin/clang-17 -fuse-ld=lld -target aarch64-linux-android -B${{ steps.setup_ndk.outputs.ndk-path }}/toolchains/llvm/prebuilt/linux-x86_64/bin/ -DANDROID_PLATFORM=21 -DANDROID_ABI=arm64-v8a -stdlib=libstdc++ -L${{ steps.setup_ndk.outputs.ndk-path }}/toolchains/llvm/prebuilt/linux-x86_64/lib/ --sysroot=${{ steps.setup_ndk.outputs.ndk-path }}/toolchains/llvm/prebuilt/linux-x86_64/sysroot -I${{ steps.setup_ndk.outputs.ndk-path }}/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/include/c++/v1 -Iinclude/ src/VmaUsage.cpp -o build/VMA.o -fPIC
-          ${{ steps.setup_ndk.outputs.ndk-path }}/toolchains/llvm/prebuilt/linux-x86_64/bin/clang-17 -fuse-ld=lld -target aarch64-linux-android -B${{ steps.setup_ndk.outputs.ndk-path }}/toolchains/llvm/prebuilt/linux-x86_64/bin/ -DANDROID_PLATFORM=21 -DANDROID_ABI=arm64-v8a -stdlib=libstdc++ -L${{ steps.setup_ndk.outputs.ndk-path }}/toolchains/llvm/prebuilt/linux-x86_64/lib/ --sysroot=${{ steps.setup_ndk.outputs.ndk-path }}/toolchains/llvm/prebuilt/linux-x86_64/sysroot -I${{ steps.setup_ndk.outputs.ndk-path }}/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/include/c++/v1 -Iinclude/ build/VMA.o ../libs/libvulkan.so -o build/VMA.so -shared
+          ${{ steps.setup_ndk.outputs.ndk-path }}/toolchains/llvm/prebuilt/linux-x86_64/bin/clang-17 -target aarch64-linux-android -B${{ steps.setup_ndk.outputs.ndk-path }}/toolchains/llvm/prebuilt/linux-x86_64/bin/ -DANDROID_PLATFORM=21 -DANDROID_ABI=arm64-v8a -stdlib=libstdc++ -L${{ steps.setup_ndk.outputs.ndk-path }}/toolchains/llvm/prebuilt/linux-x86_64/lib/ --sysroot=${{ steps.setup_ndk.outputs.ndk-path }}/toolchains/llvm/prebuilt/linux-x86_64/sysroot -I${{ steps.setup_ndk.outputs.ndk-path }}/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/include/c++/v1 -Iinclude/ src/VmaUsage.cpp -o build/VMA.o -fPIC
+          ${{ steps.setup_ndk.outputs.ndk-path }}/toolchains/llvm/prebuilt/linux-x86_64/bin/clang-17 -target aarch64-linux-android -B${{ steps.setup_ndk.outputs.ndk-path }}/toolchains/llvm/prebuilt/linux-x86_64/bin/ -DANDROID_PLATFORM=21 -DANDROID_ABI=arm64-v8a -stdlib=libstdc++ -L${{ steps.setup_ndk.outputs.ndk-path }}/toolchains/llvm/prebuilt/linux-x86_64/lib/ --sysroot=${{ steps.setup_ndk.outputs.ndk-path }}/toolchains/llvm/prebuilt/linux-x86_64/sysroot -I${{ steps.setup_ndk.outputs.ndk-path }}/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/include/c++/v1 -Iinclude/ build/VMA.o ../libs/libvulkan.so -o build/VMA.so -shared
       # - name: Build test apk's (CMake)
       #   working-directory: SDL
       #   if: ${{ contains(matrix.platform.name, 'CMake') }}
