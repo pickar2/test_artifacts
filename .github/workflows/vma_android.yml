@@ -74,6 +74,7 @@ jobs:
         working-directory: VulkanMemoryAllocator
         if: ${{ contains(matrix.platform.name, 'CMake') }}
         run: |
+          export PATH="${{ steps.setup_ndk.outputs.ndk-path }}/toolchains/llvm/prebuilt/linux-x86_64/bin:$PATH"
           # cd 
           # export CC="${{ steps.setup_ndk.outputs.ndk-path }}/toolchains/llvm/prebuilt/linux-x86_64/bin/clang --target=${{ matrix.platform.arch }}-none-linux-androideabi${{ matrix.platform.android_platform }}"
           # pwd # /home/runner/work/test_artifacts/test_artifacts/VulkanMemoryAllocator
