@@ -78,7 +78,7 @@ jobs:
         run: |
           #chmod +x ${{ steps.setup_ndk.outputs.ndk-path }}/toolchains/llvm/prebuilt/linux-x86_64/bin/ld.lld
           #ls -l ${{ steps.setup_ndk.outputs.ndk-path }}/toolchains/llvm/prebuilt/linux-x86_64/bin
-          rm ${{ steps.setup_ndk.outputs.ndk-path }}/toolchains/llvm/prebuilt/linux-x86_64/bin/ld.lld
+          # rm ${{ steps.setup_ndk.outputs.ndk-path }}/toolchains/llvm/prebuilt/linux-x86_64/bin/ld.lld
           ls -l ${{ steps.setup_ndk.outputs.ndk-path }}/toolchains/llvm/prebuilt/linux-x86_64/bin/lld ${{ steps.setup_ndk.outputs.ndk-path }}/toolchains/llvm/prebuilt/linux-x86_64/bin/ld.lld
           export PATH="${{ steps.setup_ndk.outputs.ndk-path }}/toolchains/llvm/prebuilt/linux-x86_64/bin:$PATH"
           # cd 
