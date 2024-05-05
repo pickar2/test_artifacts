@@ -78,7 +78,7 @@ jobs:
           mkdir build
           ${{ steps.setup_ndk.outputs.ndk-path }}/toolchains/llvm/prebuilt/linux-x86_64/bin/clang++ -v -std=c++20 \
             -target aarch64-linux-android -DVK_USE_PLATFORM_ANDROID_KHR \
-            -D__ANDROID__ -D__ANDROID_API__=34 -fno-exceptions -fno-rtti -stdlib=libc++ -lc++ -fuse-ld=lld \
+            -D__ANDROID__ -D__ANDROID_API__=34 -fno-exceptions -fno-rtti -stdlib=libc++ -static-libstdc++ \
             -DANDROID_PLATFORM=34 -DANDROID_ABI=arm64-v8a \
             --sysroot=${{ steps.setup_ndk.outputs.ndk-path }}/toolchains/llvm/prebuilt/linux-x86_64/sysroot \
             -B${{ steps.setup_ndk.outputs.ndk-path }}/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib/aarch64-linux-android/34 \
@@ -88,7 +88,7 @@ jobs:
             -Iinclude/ src/VmaUsage.cpp -o build/VMA.o -fPIC
           ${{ steps.setup_ndk.outputs.ndk-path }}/toolchains/llvm/prebuilt/linux-x86_64/bin/clang++ -v -std=c++20 \
             -target aarch64-linux-android -DVK_USE_PLATFORM_ANDROID_KHR \
-            -D__ANDROID__ -D__ANDROID_API__=34 -fno-exceptions -fno-rtti -stdlib=libc++ -lc++ -fuse-ld=lld \
+            -D__ANDROID__ -D__ANDROID_API__=34 -fno-exceptions -fno-rtti -stdlib=libc++ -static-libstdc++ \
             -DANDROID_PLATFORM=34 -DANDROID_ABI=arm64-v8a \
             --sysroot=${{ steps.setup_ndk.outputs.ndk-path }}/toolchains/llvm/prebuilt/linux-x86_64/sysroot \
             -B${{ steps.setup_ndk.outputs.ndk-path }}/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib/aarch64-linux-android/34 \
