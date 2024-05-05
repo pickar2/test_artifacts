@@ -48,12 +48,7 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install build-essential git \
-              pkg-config cmake ninja-build gnome-desktop-testing libasound2-dev libpulse-dev \
-              libaudio-dev libjack-dev libsndio-dev libusb-1.0-0-dev libx11-dev libxext-dev \
-              libxrandr-dev libxcursor-dev libxfixes-dev libxi-dev libxss-dev libwayland-dev \
-              libxkbcommon-dev libdrm-dev libgbm-dev libgl1-mesa-dev libgles2-mesa-dev \
-              libegl1-mesa-dev libdbus-1-dev libibus-1.0-dev libudev-dev fcitx-libs-dev libvulkan-dev \
-              g++-multilib libc++abi-dev libstdc++-13-dev python3
+              libvulkan-dev g++-multilib libc++abi-dev libstdc++-13-dev
 
       # - name: Prepare toolchain
       #   run: |
@@ -61,20 +56,20 @@ jobs:
       #     --arch arm64 \
       #     --api 21 \
       #     --install-dir=/tmp/toolchain
-      - name: Configure (CMake)
-        working-directory: SDL
-        if: ${{ contains(matrix.platform.name, 'CMake') }}
-        run: |
-          cmake -S . -B build \
-            -DCMAKE_C_FLAGS="${{ matrix.platform.cppflags }}" \
-            -DCMAKE_CXX_FLAGS="${{ matrix.platform.cppflags }}" \
-            -Wdeprecated -Wdev -Werror \
-            -DCMAKE_TOOLCHAIN_FILE=${{ steps.setup_ndk.outputs.ndk-path }}/build/cmake/android.toolchain.cmake \
-            -DANDROID_PLATFORM=${{ matrix.platform.android_platform }} \
-            -DANDROID_ABI=${{ matrix.platform.android_abi }} \
-            -DCMAKE_INSTALL_PREFIX=prefix \
-            -DCMAKE_BUILD_TYPE=Release \
-            -GNinja
+      # - name: Configure (CMake)
+      #   working-directory: SDL
+      #   if: ${{ contains(matrix.platform.name, 'CMake') }}
+      #   run: |
+      #     cmake -S . -B build \
+      #       -DCMAKE_C_FLAGS="${{ matrix.platform.cppflags }}" \
+      #       -DCMAKE_CXX_FLAGS="${{ matrix.platform.cppflags }}" \
+      #       -Wdeprecated -Wdev -Werror \
+      #       -DCMAKE_TOOLCHAIN_FILE=${{ steps.setup_ndk.outputs.ndk-path }}/build/cmake/android.toolchain.cmake \
+      #       -DANDROID_PLATFORM=${{ matrix.platform.android_platform }} \
+      #       -DANDROID_ABI=${{ matrix.platform.android_abi }} \
+      #       -DCMAKE_INSTALL_PREFIX=prefix \
+      #       -DCMAKE_BUILD_TYPE=Release \
+      #       -GNinja
       - name: Build (CMake)
         working-directory: VulkanMemoryAllocator
         if: ${{ contains(matrix.platform.name, 'CMake') }}
