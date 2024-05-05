@@ -3,6 +3,10 @@ name: VMA Build (Android)
 on:
   push:
 
+defaults:
+  run:
+    shell: bash
+
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.run_id }}
   cancel-in-progress: true
@@ -83,8 +87,6 @@ jobs:
         working-directory: VulkanMemoryAllocator
         if: ${{ contains(matrix.platform.name, 'CMake') }}
         run: |
-          chmod -R +x ${{ steps.setup_ndk.outputs.ndk-path }}/toolchains/llvm/prebuilt/linux-x86_64/bin/
-          export PATH=${{ steps.setup_ndk.outputs.ndk-path }}/toolchains/llvm/prebuilt/linux-x86_64/bin/:$PATH
           ${{ steps.setup_ndk.outputs.ndk-path }}/toolchains/llvm/prebuilt/linux-x86_64/bin/clang-17 --linker=${{ steps.setup_ndk.outputs.ndk-path }}/toolchains/llvm/prebuilt/linux-x86_64/bin/lld -target aarch64-linux-android -DANDROID_PLATFORM=21 -DANDROID_ABI=arm64-v8a -stdlib=libstdc++ --sysroot=${{ steps.setup_ndk.outputs.ndk-path }}/toolchains/llvm/prebuilt/linux-x86_64/sysroot -I${{ steps.setup_ndk.outputs.ndk-path }}/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/include/c++/v1 -Iinclude/ src/VmaUsage.cpp -o build/VMA.o -fPIC
           ${{ steps.setup_ndk.outputs.ndk-path }}/toolchains/llvm/prebuilt/linux-x86_64/bin/clang-17 --linker=${{ steps.setup_ndk.outputs.ndk-path }}/toolchains/llvm/prebuilt/linux-x86_64/bin/lld -target aarch64-linux-android -DANDROID_PLATFORM=21 -DANDROID_ABI=arm64-v8a -stdlib=libstdc++ --sysroot=${{ steps.setup_ndk.outputs.ndk-path }}/toolchains/llvm/prebuilt/linux-x86_64/sysroot -I${{ steps.setup_ndk.outputs.ndk-path }}/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/include/c++/v1 -Iinclude/ build/VMA.o ../libs/libvulkan.so -o build/VMA.so -shared
       # - name: Build test apk's (CMake)
