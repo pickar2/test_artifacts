@@ -75,8 +75,8 @@ jobs:
         working-directory: VulkanMemoryAllocator
         if: ${{ contains(matrix.platform.name, 'CMake') }}
         run: |
-          clang++ -target aarch64-linux-android -isystem ${{ steps.setup_ndk.outputs.ndk-path }}/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/include/aarch64-linux-android -I${{ steps.setup_ndk.outputs.ndk-path }}/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/include/c++/v1 -Iinclude/ src/VmaUsage.cpp -o build/VMA.o -fPIC
-          clang++ -target aarch64-linux-android -isystem ${{ steps.setup_ndk.outputs.ndk-path }}/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/include/aarch64-linux-android -I${{ steps.setup_ndk.outputs.ndk-path }}/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/include/c++/v1 -Iinclude/ build/VMA.o ../libs/libvulkan.so -o build/VMA.so -shared
+          clang++ -target aarch64-linux-android -DANDROID_PLATFORM=21 -DANDROID_ABI=arm64-v8a -isystem ${{ steps.setup_ndk.outputs.ndk-path }}/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/include/aarch64-linux-android -I${{ steps.setup_ndk.outputs.ndk-path }}/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/include/c++/v1 -Iinclude/ src/VmaUsage.cpp -o build/VMA.o -fPIC
+          clang++ -target aarch64-linux-android -DANDROID_PLATFORM=21 -DANDROID_ABI=arm64-v8a -isystem ${{ steps.setup_ndk.outputs.ndk-path }}/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/include/aarch64-linux-android -I${{ steps.setup_ndk.outputs.ndk-path }}/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/include/c++/v1 -Iinclude/ build/VMA.o ../libs/libvulkan.so -o build/VMA.so -shared
       # - name: Build test apk's (CMake)
       #   working-directory: SDL
       #   if: ${{ contains(matrix.platform.name, 'CMake') }}
