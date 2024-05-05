@@ -97,7 +97,7 @@ jobs:
             -L${{ steps.setup_ndk.outputs.ndk-path }}/toolchains/llvm/prebuilt/linux-x86_64/lib/clang/17/lib/linux/aarch64 \
             -I${{ steps.setup_ndk.outputs.ndk-path }}/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/include/c++/v1 \
             ${{ steps.setup_ndk.outputs.ndk-path }}/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib/aarch64-linux-android/34/libvulkan.so \
-            -Iinclude/ build/VMA.o ../libs/libvulkan.so -o build/VMA.so -shared
+            -Iinclude/ build/VMA.o -o build/VMA.so -shared
       # - name: Build test apk's (CMake)
       #   working-directory: SDL
       #   if: ${{ contains(matrix.platform.name, 'CMake') }}
