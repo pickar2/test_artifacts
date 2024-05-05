@@ -80,7 +80,6 @@ jobs:
             -static-libstdc++ -D__ANDROID__ -D__ANDROID_API__=34 -fno-exceptions -fno-rtti -stdlib=libc++ \
             -target aarch64-linux-android -DVK_USE_PLATFORM_ANDROID_KHR \
             -B${{ steps.setup_ndk.outputs.ndk-path }}/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib/aarch64-linux-android/34 \
-            -B${{ steps.setup_ndk.outputs.ndk-path }}/toolchains/llvm/prebuilt/linux-x86_64/bin/ \
             -DANDROID_PLATFORM=34 -DANDROID_ABI=arm64-v8a \
             -L${{ steps.setup_ndk.outputs.ndk-path }}/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib/aarch64-linux-android/34 \
             -L${{ steps.setup_ndk.outputs.ndk-path }}/toolchains/llvm/prebuilt/linux-x86_64/lib/clang/17/lib/linux/aarch64 \
@@ -92,7 +91,6 @@ jobs:
             -static-libstdc++ -D__ANDROID__ -D__ANDROID_API__=34 -fno-exceptions -fno-rtti -stdlib=libc++ \
             -target aarch64-linux-android -DVK_USE_PLATFORM_ANDROID_KHR \
             -B${{ steps.setup_ndk.outputs.ndk-path }}/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib/aarch64-linux-android/34 \
-            -B${{ steps.setup_ndk.outputs.ndk-path }}/toolchains/llvm/prebuilt/linux-x86_64/bin/ \
             -DANDROID_PLATFORM=34 -DANDROID_ABI=arm64-v8a \
             -L${{ steps.setup_ndk.outputs.ndk-path }}/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib/aarch64-linux-android/34 \
             -L${{ steps.setup_ndk.outputs.ndk-path }}/toolchains/llvm/prebuilt/linux-x86_64/lib/clang/17/lib/linux/aarch64 \
