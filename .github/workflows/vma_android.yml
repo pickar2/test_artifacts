@@ -75,8 +75,8 @@ jobs:
         working-directory: VulkanMemoryAllocator
         if: ${{ contains(matrix.platform.name, 'CMake') }}
         run: |
-          clang++ -target aarch64-linux-android21 -Iinclude/ src/VmaUsage.cpp -o build/VMA.o -fPIC
-          clang++ -target aarch64-linux-android21 -Iinclude/ build/VMA.o ../libs/libvulkan.so -o build/VMA.so -shared
+          clang++ -target aarch64-linux-android -I${{ steps.setup_ndk.outputs.ndk-path }}/sources/cxx-stl/system/include -Iinclude/ src/VmaUsage.cpp -o build/VMA.o -fPIC
+          clang++ -target aarch64-linux-android -I${{ steps.setup_ndk.outputs.ndk-path }}/sources/cxx-stl/system/include -Iinclude/ build/VMA.o ../libs/libvulkan.so -o build/VMA.so -shared
       # - name: Build test apk's (CMake)
       #   working-directory: SDL
       #   if: ${{ contains(matrix.platform.name, 'CMake') }}
