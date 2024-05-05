@@ -74,7 +74,7 @@ jobs:
         working-directory: VulkanMemoryAllocator
         if: ${{ contains(matrix.platform.name, 'CMake') }}
         run: |
-          chmod -R +x ${{ steps.setup_ndk.outputs.ndk-path }}/toolchains/llvm/prebuilt/linux-x86_64/bin/lld.ld
+          # chmod +x ${{ steps.setup_ndk.outputs.ndk-path }}/toolchains/llvm/prebuilt/linux-x86_64/bin/lld.ld
           ls -l ${{ steps.setup_ndk.outputs.ndk-path }}/toolchains/llvm/prebuilt/linux-x86_64/bin
           export PATH="${{ steps.setup_ndk.outputs.ndk-path }}/toolchains/llvm/prebuilt/linux-x86_64/bin:$PATH"
           # cd 
