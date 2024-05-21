@@ -1,7 +1,7 @@
 name: VMA Build
 
-# on:
-#   push:
+on:
+  push:
 #     paths:
 #       - VulkanMemoryAllocator/**
 
