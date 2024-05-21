@@ -42,6 +42,12 @@ jobs:
           ${{ matrix.platform.msys-env }}-pkg-config
           ${{ matrix.platform.msys-env }}-clang-tools-extra
 
+    - name: Set up msvc
+      if: runner.os == 'Windows'
+    - uses: TheMrMilchmann/setup-msvc-dev@v3
+      with:
+        arch: x64
+
     - name: Setup Linux dependencies
       if: runner.os == 'Linux'
       run: |
@@ -75,9 +81,6 @@ jobs:
         ${{ matrix.platform.source_cmd }}
         gcc -Iinclude/ include/vk_mem_alloc.h src/VmaUsage.h src/VmaUsage.cpp ../libs/libvulkan.so -shared -o build/VMA.so -fPIC
     - name: Build Windows
-    - uses: TheMrMilchmann/setup-msvc-dev@v3
-      with:
-        arch: x64
       if: runner.os == 'Windows'
       working-directory: VulkanMemoryAllocator
       id: build_windows
