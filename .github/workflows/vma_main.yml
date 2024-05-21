@@ -86,6 +86,7 @@ jobs:
       id: build_windows
       run: |
         ${{ matrix.platform.source_cmd }}
+        mkdir build
         # clang++ -v -O3 -fvisibility=default -Wno-nullability-completeness -DVMA_CALL_PRE=__declspec\(dllexport\) -DVMA_CALL_POST=__cdecl -I../Vulkan-Headers/include -Iinclude -c src/VmaUsage.cpp -o build/VMA.o
         # clang++ -shared build/VMA.o ../libs/vulkan-1.lib -o build/VMA.dll
 
