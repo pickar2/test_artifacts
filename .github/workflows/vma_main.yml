@@ -1,9 +1,9 @@
 name: VMA Build
 
-on:
-  push:
-    paths:
-      - VulkanMemoryAllocator/**
+# on:
+#   push:
+#     paths:
+#       - VulkanMemoryAllocator/**
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.run_id }}
@@ -100,8 +100,8 @@ jobs:
       id: build_windows
       run: |
         ${{ matrix.platform.source_cmd }}
-        clang++ -v -O3 -gz -fvisibility=default -Wno-nullability-completeness -DVMA_IMPLEMENTATION -DVMA_CALL_POST=__cdecl -I../Vulkan-Headers/include -c include/vk_mem_alloc.cpp -o build/VMA.o
-        clang++ -shared build/VMA.o ../libs/vulkan-1.lib -o build/VMA.dll
+        gcc -v -O3 -gz -fvisibility=default -Wno-nullability-completeness -DVMA_IMPLEMENTATION -DVMA_CALL_POST=__cdecl -I../Vulkan-Headers/include -c include/vk_mem_alloc.cpp -o build/VMA.o
+        gcc -shared build/VMA.o ../libs/vulkan-1.lib -o build/VMA.dll
     - uses: actions/upload-artifact@v4
       with:
         if-no-files-found: error
