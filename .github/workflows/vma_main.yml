@@ -29,19 +29,9 @@ jobs:
         # - { name: iOS (GNU prefix),               os: macos-latest,   shell: sh, cmake-platform: '-DCMAKE_SYSTEM_NAME=iOS -DCMAKE_OSX_ARCHITECTURES="x86_64;arm64"',  cross-build: true, skip_test_pkgconfig: true, artifact: 'VulkanMemoryAllocator-ios-gnu' }
 
     steps:
-    - name: Set up MSYS2
-      if: matrix.platform.shell == 'msys2 {0}'
-      uses: msys2/setup-msys2@v2
+    - uses: TheMrMilchmann/setup-msvc-dev@v3
       with:
-        msystem: ${{ matrix.platform.msystem }}
-        install: >-
-          ${{ matrix.platform.msys-env }}-cc
-          ${{ matrix.platform.msys-env }}-cmake
-          ${{ matrix.platform.msys-env }}-ninja
-          ${{ matrix.platform.msys-env }}-perl
-          ${{ matrix.platform.msys-env }}-pkg-config
-          ${{ matrix.platform.msys-env }}-clang-tools-extra
-
+        arch: x64
     - name: Setup Linux dependencies
       if: runner.os == 'Linux'
       run: |
@@ -57,17 +47,6 @@ jobs:
       if: matrix.platform.os == 'ubuntu-22.04'
       run: |
         sudo apt-get install libpipewire-0.3-dev libdecor-0-dev
-
-    - name: Setup Macos dependencies
-      if: runner.os == 'macOS'
-      run: |
-        export HOMEBREW_NO_INSTALLED_DEPENDENTS_CHECK=1
-        brew update
-        brew install \
-          ninja \
-          pkg-config \
-          llvm
-
     - uses: actions/checkout@v4
       with:
         submodules: true
@@ -77,15 +56,6 @@ jobs:
       run: |
         ${{ matrix.platform.source_cmd }}
         echo "#include \"vk_mem_alloc.h\"" > include/vk_mem_alloc.cpp
-        mkdir build
-    - name: Prepare Windows
-      if: runner.os == 'Windows'
-      working-directory: VulkanMemoryAllocator
-      run: |
-        ${{ matrix.platform.source_cmd }}
-        echo "#pragma comment(lib, \"../libs/vulkan-1\")" > include/vk_mem_alloc.cpp
-        echo "#define VMA_CALL_PRE  __declspec(dllexport)" >> include/vk_mem_alloc.cpp
-        echo "#include \"vk_mem_alloc.h\"" >> include/vk_mem_alloc.cpp
         mkdir build
     - name: Build Linux
       if: runner.os == 'Linux'
