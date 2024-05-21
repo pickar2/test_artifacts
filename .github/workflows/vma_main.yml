@@ -103,7 +103,8 @@ jobs:
         # clang++ -v -O3 -fvisibility=default -Wno-nullability-completeness -DVMA_CALL_PRE=__declspec\(dllexport\) -DVMA_CALL_POST=__cdecl -I../Vulkan-Headers/include -Iinclude -c src/VmaUsage.cpp -o build/VMA.o
         # clang++ -shared build/VMA.o ../libs/vulkan-1.lib -o build/VMA.dll
 
-        gcc -v -O3 -fvisibility=default -Wno-nullability-completeness -DVMA_CALL_PRE=__declspec\(dllexport\) -DVMA_CALL_POST=__cdecl -I../Vulkan-Headers/include -Iinclude include/vk_mem_alloc.h src/VmaUsage.h src/VmaUsage.cpp ../libs/vulkan-1.lib -shared -o build/libVma.dll -fPIC
+        clang -v -target x86_64-pc-windows-msvc -O3 -fvisibility=default -Wno-nullability-completeness -DVMA_CALL_PRE=__declspec\(dllexport\) -DVMA_CALL_POST=__cdecl -I../Vulkan-Headers/include -Iinclude src/VmaUsage.cpp ../libs/vulkan-1.lib -shared -o build/VMA.dll
+        # gcc -v -O3 -fvisibility=default -Wno-nullability-completeness -DVMA_CALL_PRE=__declspec\(dllexport\) -DVMA_CALL_POST=__cdecl -I../Vulkan-Headers/include -Iinclude include/vk_mem_alloc.h src/VmaUsage.h src/VmaUsage.cpp ../libs/vulkan-1.lib -shared -o build/libVma.dll -fPIC
     - uses: actions/upload-artifact@v4
       with:
         if-no-files-found: error
