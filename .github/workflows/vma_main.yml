@@ -2,8 +2,8 @@ name: VMA Build
 
 on:
   push:
-#     paths:
-#       - VulkanMemoryAllocator/**
+    paths:
+      - VulkanMemoryAllocator/**
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.run_id }}
@@ -23,7 +23,7 @@ jobs:
       matrix:
         platform:
         - { name: Windows (clang64),              os: windows-latest, shell: 'msys2 {0}', msystem: mingw64, msys-env: mingw-w64-x86_64, artifact: 'VulkanMemoryAllocator-msys2-clang64' }
-        # - { name: Ubuntu 20.04,                   os: ubuntu-20.04,   shell: sh, artifact: 'VulkanMemoryAllocator-ubuntu20.04' }
+        - { name: Ubuntu 20.04,                   os: ubuntu-20.04,   shell: sh, artifact: 'VulkanMemoryAllocator-ubuntu20.04' }
         # - { name: MacOS (Framework),              os: macos-latest,   shell: sh, cmake-platform: '-DCMAKE_OSX_ARCHITECTURES="x86_64;arm64"', cmake: '-DVulkanMemoryAllocator_FRAMEWORK=ON -DVulkanMemoryAllocator_CLANG_TIDY=OFF', skip_test_pkgconfig: true, artifact: 'VulkanMemoryAllocator-macos-framework', no-static: true }
         # - { name: MacOS (GNU prefix),             os: macos-latest,   shell: sh, cmake-platform: '-DCMAKE_OSX_ARCHITECTURES="x86_64"', cmake: '-DCLANG_TIDY_BINARY="$(brew --prefix llvm)/bin/clang-tidy"', artifact: 'VulkanMemoryAllocator-macos-gnu' }
         # - { name: iOS (GNU prefix),               os: macos-latest,   shell: sh, cmake-platform: '-DCMAKE_SYSTEM_NAME=iOS -DCMAKE_OSX_ARCHITECTURES="x86_64;arm64"',  cross-build: true, skip_test_pkgconfig: true, artifact: 'VulkanMemoryAllocator-ios-gnu' }
@@ -66,13 +66,6 @@ jobs:
     - uses: actions/checkout@v4
       with:
         submodules: true
-    - name: Prepare Linux
-      if: runner.os == 'Linux'
-      working-directory: VulkanMemoryAllocator
-      run: |
-        ${{ matrix.platform.source_cmd }}
-        echo "#include \"vk_mem_alloc.h\"" > include/vk_mem_alloc.cpp
-        mkdir build
     - name: Build Linux
       if: runner.os == 'Linux'
       working-directory: VulkanMemoryAllocator
@@ -87,11 +80,8 @@ jobs:
       run: |
         ${{ matrix.platform.source_cmd }}
         mkdir build
-        # clang++ -v -O3 -fvisibility=default -Wno-nullability-completeness -DVMA_CALL_PRE=__declspec\(dllexport\) -DVMA_CALL_POST=__cdecl -I../Vulkan-Headers/include -Iinclude -c src/VmaUsage.cpp -o build/VMA.o
-        # clang++ -shared build/VMA.o ../libs/vulkan-1.lib -o build/VMA.dll
 
         clang -v -target x86_64-pc-windows-msvc -O3 -fvisibility=default -Wno-nullability-completeness -DVMA_CALL_PRE=__declspec\(dllexport\) -DVMA_CALL_POST=__cdecl -I../Vulkan-Headers/include -Iinclude src/VmaUsage.cpp ../libs/vulkan-1.lib -shared -o build/VMA.dll
-        # gcc -v -O3 -fvisibility=default -Wno-nullability-completeness -DVMA_CALL_PRE=__declspec\(dllexport\) -DVMA_CALL_POST=__cdecl -I../Vulkan-Headers/include -Iinclude include/vk_mem_alloc.h src/VmaUsage.h src/VmaUsage.cpp ../libs/vulkan-1.lib -shared -o build/libVma.dll -fPIC
     - uses: actions/upload-artifact@v4
       with:
         if-no-files-found: error
